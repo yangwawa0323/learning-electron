@@ -1,0 +1,26 @@
+{
+	"name": "learning-electron",
+	"version": "1.0.0",
+	"description": "",
+	"main": "main.js",
+	"scripts": {
+		"start": "electron .",
+		"inspect": "electron --inspect=8998 .",
+		"inspect:brk": "electron --inspect-brk=8998 .",
+		"watch": "nodemon --exec electron .",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"bcrypt": "^5.1.1",
+		"crypto": "^1.0.1",
+		"electron": "^29.1.5",
+		"electron-window-state": "^5.0.3",
+		"nodemon": "^3.1.0"
+	},
+	"dependencies": {
+		"md5": "^2.3.0"
+	}
+}
