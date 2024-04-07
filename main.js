@@ -1,8 +1,5 @@
-const { app, BrowserWindow, session } = require('electron');
+const { app, BrowserWindow, globalShortcut } = require('electron');
 const windowStateKeeper = require('electron-window-state');
-setTimeout(() => {
-	console.log(`Checking ready: ${app.isReady()}`);
-}, 2000);
 
 // keep a global reference
 let mainWindow, secondaryWindow;
@@ -26,47 +23,27 @@ function createWindow() {
 		show: false,
 	});
 
-	let wc = mainWindow.webContents;
-	let ses = session.defaultSession;
-
-	let getCookies = () => {
-		ses.cookies
-			.get({ name: 'username' })
-			.then((cookies) => {
-				console.log(cookies);
-			})
-			.catch((errors) => console.log(errors));
-	};
-
 	mainWindow.once('ready-to-show', mainWindow.show);
-	// secondaryWindow.once('ready-to-show', secondaryWindow.show);
 
 	// ctrl + shift + i
 	mainWindow.webContents.openDevTools();
 
+	let result = globalShortcut.register('CommandOrControl+G', () => {
+		console.log('User pressed G with combination key.');
+		globalShortcut.unregisterAll();
+	});
+
+	console.log(
+		`Combination key is  ${
+			!globalShortcut.isRegistered('CommandOrControl+Shift+Z')
+				? 'Registed '
+				: 'Available'
+		}`
+	);
+
 	mainWindow.loadFile('index.html');
 	// secondaryWindow.loadFile('secondary.html');
-
 	// mainWindow.loadURL('https://github.com');
-
-	let now = new Date();
-	let cookie = {
-		url: 'https://51cloudclass.local',
-		name: 'username',
-		value: 'test08@163.com',
-		expirationDate: now.setDate(now.getDate() + 7),
-	};
-
-	/* ses.cookies.set(cookie).then(() => {
-		console.log('username cookie is set');
-		getCookies();
-	}); */
-
-	ses.cookies.remove('https://51cloudclass.local', 'username');
-
-	mainWindow.webContents.on('did-finish-load', () => {
-		getCookies();
-	});
 
 	mainWindow.on('closed', () => {
 		mainWindow = null;
