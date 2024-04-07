@@ -1,10 +1,44 @@
-const { app, BrowserWindow, globalShortcut } = require('electron');
+const { app, BrowserWindow, Menu, MenuItem, Tray } = require('electron');
 const windowStateKeeper = require('electron-window-state');
 
 // keep a global reference
-let mainWindow, secondaryWindow;
+let mainWindow, secondaryWindow, tray;
+
+let mainMenu = Menu.buildFromTemplate(require('./menu'));
+
+let contextMenu = Menu.buildFromTemplate([
+	{ label: 'Item 1' },
+	{ role: 'editMenu', enabled: false },
+]);
+
+let trayMenu = Menu.buildFromTemplate([
+	{
+		label: 'Tray Item 1',
+		click: () => {
+			console.log('click tray item 1');
+		},
+	},
+	{ role: 'quit' },
+]);
+
+function createTray() {
+	tray = new Tray('./icon@2x.png');
+	tray.setToolTip('51cloudclass electron tray icon');
+	tray.setContextMenu(trayMenu);
+
+	tray.on('click', (e) => {
+		console.log(e);
+
+		if (e.shiftKey) {
+			app.quit();
+		} else {
+			mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+		}
+	});
+}
 
 function createWindow() {
+	createTray();
 	//  window state keeper is working at app.on('close')
 	let winState = windowStateKeeper({
 		defaultHeight: 600,
@@ -21,25 +55,19 @@ function createWindow() {
 			contextIsolation: false,
 		},
 		show: false,
+		icon: './CloudClass.png',
 	});
 
 	mainWindow.once('ready-to-show', mainWindow.show);
 
 	// ctrl + shift + i
-	mainWindow.webContents.openDevTools();
+	// mainWindow.webContents.openDevTools();
 
-	let result = globalShortcut.register('CommandOrControl+G', () => {
-		console.log('User pressed G with combination key.');
-		globalShortcut.unregisterAll();
+	Menu.setApplicationMenu(mainMenu);
+
+	mainWindow.webContents.on('context-menu', () => {
+		contextMenu.popup();
 	});
-
-	console.log(
-		`Combination key is  ${
-			!globalShortcut.isRegistered('CommandOrControl+Shift+Z')
-				? 'Registed '
-				: 'Available'
-		}`
-	);
 
 	mainWindow.loadFile('index.html');
 	// secondaryWindow.loadFile('secondary.html');
