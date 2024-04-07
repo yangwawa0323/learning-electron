@@ -1,4 +1,11 @@
-const { app, BrowserWindow, Menu, MenuItem, Tray } = require('electron');
+const {
+	app,
+	BrowserWindow,
+	Menu,
+	MenuItem,
+	Tray,
+	powerMonitor,
+} = require('electron');
 const windowStateKeeper = require('electron-window-state');
 
 // keep a global reference
@@ -55,7 +62,7 @@ function createWindow() {
 			contextIsolation: false,
 		},
 		show: false,
-		icon: './CloudClass.png',
+		icon: './icon@2x.png',
 	});
 
 	mainWindow.once('ready-to-show', mainWindow.show);
@@ -78,6 +85,18 @@ function createWindow() {
 	});
 
 	winState.manage(mainWindow);
+
+	powerMonitor.on('on-ac', (e) => {
+		console.log('plug in AC now.');
+	});
+
+	powerMonitor.on('on-battery', (e) => {
+		console.log('AC is off, battery support.');
+	});
+
+	powerMonitor.on('unlock-screen', (e) => {
+		mainWindow.show();
+	});
 }
 
 app.on('ready', () => {
