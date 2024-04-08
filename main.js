@@ -68,7 +68,7 @@ function createWindow() {
 	mainWindow.once('ready-to-show', mainWindow.show);
 
 	// ctrl + shift + i
-	// mainWindow.webContents.openDevTools();
+	mainWindow.webContents.openDevTools();
 
 	Menu.setApplicationMenu(mainMenu);
 
