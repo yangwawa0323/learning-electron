@@ -9,14 +9,30 @@
 
 <body>
     <h1>51cloudclass.com learning electron</h1>
-
+    <h3><a href="#" onclick="newWin()">new Window</a></h3>
+    <h3><a href="#" onclick="closeWin()">close Window</a></h3>
+    <h3><a href="#" onclick="styleWin()">style Window</a></h3>
 </body>
-<!-- <script>
+<script>
+    let win;  // BrowserWindowProxy  < 18.0.0
+    // BrowserWindow
+    const newWin = () => {
+        win = window.open('./second.html',
+            '_blank',
+            'width=500,height=450,alwaysOnTop=1')
+    }
+
+    const closeWin = () => {
+        win.close()
+    }
+
+    const styleWin = () => {
+        win.document.querySelector('h2.inline-block').style.fontSize = '11px'
+    }
+</script>
+
+<script>
     require('./renderer.js')
-</script> -->
-
-<script src="./renderer.js">
-
 </script>
 
 </html>
