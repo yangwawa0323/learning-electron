@@ -1,17 +1,21 @@
-// Empty renderer
-console.log('Renderer process.');
+const { ipcRenderer } = require('electron');
 
-let cron = require('node-cron');
+let globalType;
+const captureNow = (type) => {
+	/* let capScreenBtn = document.querySelector('button#capture-screen');
+	console.log(capScreenBtn); */
+	globalType = type;
 
-let task = cron.schedule('*/5 * * * * *', () => {
-	console.log(`${new Date().toLocaleString()} every 5 seconds.`);
+	ipcRenderer.send('capture', { type });
+};
+
+ipcRenderer.on('capture-result', (e, args) => {
+	console.log(args);
+	let img = document.querySelector('img#image-result');
+	if (globalType === 'window') {
+		let win = args.filter((a) => /Visual Studio Code/.test(a.name))[0];
+		img.src = win.thumbnail.toDataURL();
+	} else {
+		img.src = args[0].thumbnail.toDataURL();
+	}
 });
-
-setTimeout(() => {
-	task.stop();
-}, 40000);
-
-alert('Hello world!');
-
-let h1 = document.getElementsByTagName('h1');
-console.log(h1);

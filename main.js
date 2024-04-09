@@ -4,7 +4,8 @@ const {
 	Menu,
 	MenuItem,
 	Tray,
-	powerMonitor,
+	ipcMain,
+	desktopCapturer,
 } = require('electron');
 const windowStateKeeper = require('electron-window-state');
 
@@ -77,27 +78,24 @@ function createWindow() {
 	});
 
 	mainWindow.loadFile('index.html');
-	// secondaryWindow.loadFile('secondary.html');
-	// mainWindow.loadURL('https://github.com');
-
 	mainWindow.on('closed', () => {
 		mainWindow = null;
 	});
 
 	winState.manage(mainWindow);
-
-	powerMonitor.on('on-ac', (e) => {
-		console.log('plug in AC now.');
-	});
-
-	powerMonitor.on('on-battery', (e) => {
-		console.log('AC is off, battery support.');
-	});
-
-	powerMonitor.on('unlock-screen', (e) => {
-		mainWindow.show();
-	});
 }
+
+ipcMain.on('capture', (e, args) => {
+	desktopCapturer
+		.getSources({
+			types: [args.type],
+			thumbnailSize: { width: 1920, height: 1080 },
+		})
+		.then((sources) => {
+			// screens: [0, 1]
+			e.reply('capture-result', sources);
+		});
+});
 
 app.on('ready', () => {
 	createWindow();
