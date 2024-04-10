@@ -7,6 +7,7 @@ const {
 	ipcMain,
 	desktopCapturer,
 } = require('electron');
+const path = require('node:path');
 const windowStateKeeper = require('electron-window-state');
 
 // keep a global reference
@@ -30,7 +31,14 @@ let trayMenu = Menu.buildFromTemplate([
 ]);
 
 function createTray() {
-	tray = new Tray('./icon@2x.png');
+	// packaged:   d:\.....\resources\assets\icon.ico
+	// develop:    .\assets\icon.ico
+
+	const imgPath = app.isPackaged
+		? path.join(process.resourcesPath, 'assets/icon.ico')
+		: './assets/icon.ico';
+
+	tray = new Tray(imgPath);
 	tray.setToolTip('51cloudclass electron tray icon');
 	tray.setContextMenu(trayMenu);
 

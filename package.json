@@ -1,13 +1,14 @@
 {
 	"name": "learning-electron",
 	"version": "1.0.0",
-	"description": "",
+	"description": "5117xue.com electron builder demo",
 	"main": "main.js",
 	"scripts": {
 		"start": "electron .",
 		"inspect": "electron --inspect=8998 .",
 		"inspect:brk": "electron --inspect-brk=8998 .",
 		"watch": "nodemon --exec electron .",
+		"build": "electron-builder build --windows msi",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
@@ -17,11 +18,31 @@
 		"bcrypt": "^5.1.1",
 		"crypto": "^1.0.1",
 		"electron": "29.1.5",
-		"electron-window-state": "^5.0.3",
+		"electron-builder": "^24.13.3",
 		"node-cron": "^3.0.3",
 		"nodemon": "^3.1.0"
 	},
 	"dependencies": {
+		"electron-window-state": "^5.0.3",
 		"md5": "^2.3.0"
-	}
+	},
+	"build": {
+		"appId": "com.5117xue.updater.electron.demo",
+		"icon": "./assets/icon.ico",
+		"win": {
+			"target": [
+				{
+					"target": "nsis",
+					"arch": [
+						"x64",
+						"ia32"
+					]
+				}
+			]
+		},
+		"extraResources": [
+			"./assets/**"
+		]
+	},
+	"repository": "https://github.com/yangwawa0323/electron-updater-demo"
 }
