@@ -1,0 +1,4 @@
+owner: yangwawa0323
+repo: electron-updater-demo
+provider: github
+updaterCacheDirName: learning-electron-updater

@@ -6,10 +6,11 @@ const {
 	Tray,
 	ipcMain,
 	desktopCapturer,
+	autoUpdater,
 } = require('electron');
 const path = require('node:path');
 const windowStateKeeper = require('electron-window-state');
-
+const updater = require('./updater.js');
 // keep a global reference
 let mainWindow, secondaryWindow, tray;
 
@@ -54,6 +55,7 @@ function createTray() {
 }
 
 function createWindow() {
+	setTimeout(() => updater(), 3000);
 	createTray();
 	//  window state keeper is working at app.on('close')
 	let winState = windowStateKeeper({
